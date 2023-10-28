@@ -2,8 +2,9 @@ import cv2
 import numpy as np
 import pytesseract as pts
 
-#PATH OCR = C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe
-pts.pytesseract.tesseract_cmd = r'C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+#pts.pytesseract.tesseract_cmd = r'C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+pts.pytesseract.tesseract_cmd = r'C:\Users\Victor\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+
 def load_image(path):
     return cv2.imread(path)
 
@@ -12,7 +13,8 @@ def show_image(w_name, image):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-
+def subImage(image, x,y,w,h):
+    return image[y:y+h,x:x+w]
 def extract_text_from_image(image):
     gray_image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 

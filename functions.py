@@ -1,24 +1,12 @@
 import cv2
 import numpy as np
 import pytesseract as pts
-import matplotlib.pyplot as plt
 
 
 pts.pytesseract.tesseract_cmd = r'C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 
 # pts.pytesseract.tesseract_cmd = r'C:\Users\Victor\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
-
-def auto_subplotter(size_x, size_y, d):
-    i = 1
-    for pair in d.items():
-        plt.subplot(size_x, size_y, i)
-        plt.title(pair[1])
-        plt.imshow(pair[0])
-        i += 1
-
-    plt.show()
-
 
 def load_image(path):
     return cv2.imread(path)
@@ -44,16 +32,16 @@ def extract_text_from_image(image):
 
 
 def get_name(image):
-    return subImage(image, 26, 439, 344, 56)
+    return subImage(image, 26, 439, 500, 56)
 
 
 def get_sex(image):
-    return subImage(image, 339, 548, 186, 34)
+    return subImage(image, 350, 549, 100, 51)
 
 
 def get_issuer(image):
-    return subImage(image, 339, 582, 251, 36)
+    return subImage(image, 350, 594, 120, 40)
 
 
 def get_expedition(image):
-    return subImage(image, 339, 617, 251, 40)
+    return subImage(image, 350, 630, 200, 50)

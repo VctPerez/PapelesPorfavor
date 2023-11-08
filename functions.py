@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 import pytesseract as pts
-
-
+import face_recognition
+z
 pts.pytesseract.tesseract_cmd = r'C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 
@@ -45,3 +45,12 @@ def get_issuer(image):
 
 def get_expedition(image):
     return subImage(image, 350, 630, 200, 50)
+
+
+def load_face_image(path):
+    return face_recognition.load_image_file(path)
+
+
+def get_face_locations(path):
+    image = load_face_image(path)
+    return face_recognition.face_locations(image)

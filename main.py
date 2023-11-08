@@ -37,8 +37,18 @@ def check_getters(image):
     print(text1)
 
 
+def check_face_recognition():
+    adri = f.load_face_image("images/faceRecognition/adri.jpg")
+    faces = f.get_face_locations("images/faceRecognition/adri.jpg")
+    print(f'Faces: {len(faces)}\n Content: {faces}')
+
+    plt.imshow(f.subImage(adri, faces[0][3], faces[0][0], faces[0][1] - faces[0][3], faces[0][2] - faces[0][0]))
+
+    plt.show()
+
+
 if __name__ == '__main__':
     path = "images/pasaporte_1.jpg"
     image = f.load_image(path)
-    check_getters(image)
-    
+    # check_getters(image)
+    check_face_recognition()

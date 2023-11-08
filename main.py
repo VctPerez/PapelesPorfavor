@@ -41,8 +41,4 @@ if __name__ == '__main__':
     path = "images/pasaporte_1.jpg"
     image = f.load_image(path)
     check_getters(image)
-    # f.show_image("passport", image)
-    # image_cropped = f.subImage(image,26,439,344,56)
-
-    # f.show_image("cropped", image_cropped)
-    # print(f.extract_text_from_image(image_cropped))
+    

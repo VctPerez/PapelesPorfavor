@@ -42,9 +42,19 @@ def check_face_recognition():
     faces = f.get_face_locations("images/faceRecognition/adri.jpg")
     print(f'Faces: {len(faces)}\n Content: {faces}')
 
-    plt.imshow(f.subImage(adri, faces[0][3], faces[0][0], faces[0][1] - faces[0][3], faces[0][2] - faces[0][0]))
+    jose = f.subImage(adri, faces[0][3], faces[0][0], faces[0][1] - faces[0][3], faces[0][2] - faces[0][0])
 
-    plt.show()
+    jose = f.passport_image(jose, 74)
+
+    f.show_image("jose", jose)
+
+
+def check_binarize():
+    victor = f.load_image("images/faceRecognition/victor1.jpg")
+    victor_binarized = f.binarize_image(victor, 100)
+    f.show_image("victor", victor_binarized)
+    victor_matched = f.matcher_histograms(victor_binarized)
+    f.show_image("victor_matched", victor_matched)
 
 
 if __name__ == '__main__':
@@ -52,3 +62,4 @@ if __name__ == '__main__':
     image = f.load_image(path)
     # check_getters(image)
     check_face_recognition()
+    # check_binarize()

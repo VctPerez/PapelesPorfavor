@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 import pytesseract as pts
 import face_recognition
-z
+from skimage.exposure import match_histograms
+
 pts.pytesseract.tesseract_cmd = r'C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 
@@ -20,6 +21,24 @@ def show_image(w_name, image):
 
 def subImage(image, x, y, w, h):
     return image[y:y + h, x:x + w]
+
+
+def binarize_image(image, threshold):
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    ret, image_binarized = cv2.threshold(gray_image, threshold, 255, cv2.THRESH_BINARY)
+    return image_binarized
+
+
+def matcher_histograms(image):
+    image_BGR = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+    reference = load_image("images/matcher.png")
+    return match_histograms(image_BGR, reference, channel_axis=-1)
+
+
+def passport_image(image, thresh):
+    gray_image = binarize_image(image, thresh)
+    return matcher_histograms(gray_image)
 
 
 def extract_text_from_image(image):
@@ -54,3 +73,7 @@ def load_face_image(path):
 def get_face_locations(path):
     image = load_face_image(path)
     return face_recognition.face_locations(image)
+
+
+def get_face_from_image(image, coords):
+    return subImage(image, coords[0][3], coords[0][0], coords[0][1] - coords[0][3], coords[0][2] - coords[0][0])

@@ -77,3 +77,7 @@ def get_face_locations(path):
 
 def get_face_from_image(image, coords):
     return subImage(image, coords[0][3], coords[0][0], coords[0][1] - coords[0][3], coords[0][2] - coords[0][0])
+
+
+def get_face_descriptor(face):
+    return face_recognition.face_encodings(face)

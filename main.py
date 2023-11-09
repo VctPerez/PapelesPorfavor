@@ -48,6 +48,9 @@ def check_face_recognition():
 
     f.show_image("jose", jose)
 
+    # descriptor = f.get_face_descriptor(adri)
+    # print(f'Descriptor: {f.get_face_descriptor(adri)}')
+
 
 def check_binarize():
     victor = f.load_image("images/faceRecognition/victor1.jpg")

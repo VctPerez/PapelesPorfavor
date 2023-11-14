@@ -1,3 +1,5 @@
+import cv2
+
 import functions as f
 import matplotlib
 
@@ -38,17 +40,24 @@ def check_getters(image):
 
 
 def check_face_recognition():
-    adri = f.load_face_image("images/faceRecognition/adri.jpg")
-    faces = f.get_face_locations("images/faceRecognition/adri.jpg")
-    print(f'Faces: {len(faces)}\n Content: {faces}')
+    victor1 = f.load_face_image("images/faceRecognition/victor1.jpg")
+    obama = f.load_face_image("images/faceRecognition/obama.png")
+    # locations_victor1 = f.get_face_locations("images/faceRecognition/victor1.jpg")
+    # print(f'Faces: {len(locations_victor1)}\n\t Content: {locations_victor1}')
+    # f.show_image("victor", victor1)
+    # # face_1 = f.subImage(victor1, locations_victor1[0][3], locations_victor1[0][0],
+    #                     locations_victor1[0][1] - locations_victor1[0][3],
+    #                     locations_victor1[0][2] - locations_victor1[0][0])
 
-    jose = f.subImage(adri, faces[0][3], faces[0][0], faces[0][1] - faces[0][3], faces[0][2] - faces[0][0])
+    # face_1 = f.passport_image(face_1, 120)
 
-    jose = f.passport_image(jose, 74)
+    # f.show_image("face", face_1)
+    descriptor1 = f.get_face_descriptor(victor1)[0]
+    descriptor2 = f.get_face_descriptor(obama)[0]
+    print(f.compare_faces([descriptor1], descriptor2))
 
-    f.show_image("jose", jose)
+    # print(f'Difference: {f.get_face_difference(descriptor, f)}')
 
-    # descriptor = f.get_face_descriptor(adri)
     # print(f'Descriptor: {f.get_face_descriptor(adri)}')
 
 
@@ -56,7 +65,7 @@ def check_binarize():
     victor = f.load_image("images/faceRecognition/victor1.jpg")
     victor_binarized = f.binarize_image(victor, 100)
     f.show_image("victor", victor_binarized)
-    victor_matched = f.matcher_histograms(victor_binarized)
+    victor_matched = f.matcher_histograms(cv2.cvtColor(victor_binarized, cv2.COLOR_GRAY2BGR))
     f.show_image("victor_matched", victor_matched)
 
 

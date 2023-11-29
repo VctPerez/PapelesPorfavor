@@ -20,8 +20,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>60</y>
+      <x>130</x>
+      <y>80</y>
       <width>611</width>
       <height>511</height>
      </rect>
@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>890</x>
-      <y>380</y>
+      <y>420</y>
       <width>281</width>
       <height>51</height>
      </rect>
@@ -45,7 +45,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255)</string>
+     <string notr="true">color: rgb(255, 255, 255); background-color: rgb(40, 40, 40)</string>
     </property>
     <property name="text">
      <string>Revisar Pasaportes</string>
@@ -55,7 +55,7 @@
     <property name="geometry">
      <rect>
       <x>890</x>
-      <y>160</y>
+      <y>220</y>
       <width>281</width>
       <height>51</height>
      </rect>
@@ -66,7 +66,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255)</string>
+     <string notr="true">color: rgb(255, 255, 255); background-color: rgb(40, 40, 40)</string>
     </property>
     <property name="text">
      <string>Presentar Pasaporte</string>

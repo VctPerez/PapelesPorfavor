@@ -70,8 +70,12 @@ def check_binarize():
 
 
 if __name__ == '__main__':
-    path = "images/pasaporte_1.jpg"
-    image = f.load_image(path)
-    # check_getters(image)
-    check_face_recognition()
-    # check_binarize()
+    # path = "images/pasaporte_1.jpg"
+    # image = f.load_image(path)
+    # # check_getters(image)
+    # check_face_recognition()
+    # # check_binarize()
+    # main()
+    for i in range(10):
+        print(i)
+        sleep(1)

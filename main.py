@@ -9,111 +9,81 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QRect, QPropertyAnimation
+import cv2
+from PyQt5.QtGui import QImage
+from PyQt5.QtWidgets import QFileDialog
 
-
-def click_event():
-    print("CLickao")
+import functions as f
 
 
 class Ui_MainWindow(object):
-    def __init__(self, MainWindow):
-        self.direction_animation = True
-        self.widgets = []
-        self.animation_index = 0
-        self.setupUi(MainWindow)
-        self.animations()
-
-    def start_animations(self):
-        self.animations(self.passport_button_2)
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1920, 1080)
         MainWindow.setStyleSheet("background-color: rgb(0, 0, 0)")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(60, 80, 611, 511))
-        self.label.setObjectName("label")
-        self.passport_button_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.passport_button_2.setGeometry(QtCore.QRect(890, 420, 281, 51))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        self.passport_button_2.setFont(font)
-        self.passport_button_2.setStyleSheet("color: rgb(255, 255, 255); background-color: rgb(40, 40, 40)")
-        self.passport_button_2.setObjectName("passport_button_2")
-        self.passport_button_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.passport_button_3.setGeometry(QtCore.QRect(890, 220, 281, 51))
+        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(280, 240, 1341, 661))
+        self.widget.setObjectName("widget")
+        self.gridLayout = QtWidgets.QGridLayout(self.widget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.passport_button_3 = QtWidgets.QPushButton(self.widget)
         font = QtGui.QFont()
         font.setPointSize(18)
         self.passport_button_3.setFont(font)
         self.passport_button_3.setStyleSheet("color: rgb(255, 255, 255); background-color: rgb(40, 40, 40)")
         self.passport_button_3.setObjectName("passport_button_3")
+        self.gridLayout.addWidget(self.passport_button_3, 0, 1, 1, 1)
+        self.passport_button_2 = QtWidgets.QPushButton(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.passport_button_2.setFont(font)
+        self.passport_button_2.setStyleSheet("color: rgb(255, 255, 255); background-color: rgb(40, 40, 40)")
+        self.passport_button_2.setObjectName("passport_button_2")
+        self.gridLayout.addWidget(self.passport_button_2, 1, 1, 1, 1)
+        self.label = QtWidgets.QLabel(self.widget)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 2, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1920, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        # self.passport_button_2.clicked.connect(self.animations)
-        # self.passport_button_3.clicked.connect(self.animations)
-
-        # self.direction_animation = True
-        self.widgets.append(self.passport_button_3)
-        self.widgets.append(self.passport_button_2)
-        self.widgets.append(self.label)
-
         self.retranslateUi(MainWindow)
+        self.passport_button_3.clicked.connect(self.label.clear) # type: ignore
+        self.passport_button_3.clicked.connect(self.load_image)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.filename = None
+        self.image = None
+
+    def load_image(self):
+        self.filename = QtWidgets.QFileDialog.getOpenFileName(filter="Image (*.*)")[0]
+        self.image = f.load_image(self.filename)
+        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+        self.image = QtGui.QImage(self.image, self.image.shape[1], self.image.shape[0], self.image.strides[0]
+                                  , QtGui.QImage.Format_RGB888)
+        self.label.setPixmap(QtGui.QPixmap.fromImage(self.image))
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow",
-                                      "<html><head/><body><p><img src=\":/imagenes/images/ui/logo papeles porfavor.png\"/></p></body></html>"))
-        self.passport_button_2.setText(_translate("MainWindow", "Revisar Pasaportes"))
         self.passport_button_3.setText(_translate("MainWindow", "Presentar Pasaporte"))
-
-    def animations(self):
-        # Hallamos la direccion en la que va la animacion
-        direction = 1 if self.direction_animation else -1
-
-        # Sacamos la posicion incial
-        start_pos = self.widgets[self.animation_index].geometry()
-
-        # Creamos la animacion
-        self.anim = QPropertyAnimation(self.widgets[self.animation_index], b"geometry")
-        self.anim.setDuration(1666)
-        self.anim.setStartValue(start_pos)
-        self.anim.setEndValue(QRect(890, QRect.top(start_pos) + 20 * direction, 281, 50))
-        print(self.direction_animation, ' --> ', direction)
-
-        if not self.direction_animation:
-            if self.animation_index == 2:
-                self.animation_index = 0
-            else:
-                self.animation_index += 1
-
-        self.direction_animation = not self.direction_animation
-        self.anim.finished.connect(self.reset_animation)
-        self.anim.start()
-
-
-    def reset_animation(self):
-        self.animations()
-
-
+        self.passport_button_2.setText(_translate("MainWindow", "Revisar Pasaportes"))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p><img src=\":/imagenes/images/ui/logo papeles porfavor.png\"/></p></body></html>"))
 import resources_rc
+
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow(MainWindow)
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

@@ -31,6 +31,10 @@ def binarize_image(image, threshold):
     return image_binarized
 
 
+def resize(image, width, height):
+    return cv2.resize(image, (width, height))
+
+
 def matcher_histograms(image, reference_path='images/matcher.png'):
     """Matches the histogram from the reference image and the out image
 
@@ -129,6 +133,10 @@ def get_expedition(image):
     return subImage(image, 350, 630, 200, 50)
 
 
+def get_id(image):
+    return subImage(image, 26, 766, 244, 56)
+
+
 def load_face_image(path):
     return face_recognition.load_image_file(path)
 
@@ -138,7 +146,8 @@ def get_face_locations(image):
 
 
 def get_face_from_image(image, coords):
-    return subImage(image, coords[0][3], coords[0][0], coords[0][1] - coords[0][3], coords[0][2] - coords[0][0])
+    return subImage(image, coords[0][3] - 40, coords[0][0] - 40, coords[0][1] - coords[0][3] + 80,
+                    coords[0][2] - coords[0][0] + 80)
 
 
 def get_face_descriptor(face, locations=None):
@@ -154,3 +163,17 @@ def get_face_difference(encoding_list, face2):
 
 def compare_faces(descriptor_list, descriptor2):
     return face_recognition.compare_faces(descriptor_list, descriptor2, 0.6)
+
+
+def change_face_histogram(face):
+    face_coords = get_face_locations(face)
+    face_binarized = binarize_image(face, 100)
+    face_matched = matcher_histograms(cv2.cvtColor(face_binarized, cv2.COLOR_GRAY2BGR))
+    return get_face_from_image(face_matched, face_coords)
+
+
+def insert_face_into_passport(passport, picture):
+    face = change_face_histogram(picture)
+    face = resize(face, 209, 247)
+    passport[513:760, 43:252] = face
+    return passport

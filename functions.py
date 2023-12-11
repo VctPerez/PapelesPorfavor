@@ -6,6 +6,7 @@ from scipy import signal
 from skimage.exposure import match_histograms
 
 pts.pytesseract.tesseract_cmd = r'C:\Users\vparm\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 # pts.pytesseract.tesseract_cmd = r'C:\Users\Victor\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
@@ -117,20 +118,54 @@ def extract_text_from_image(image):
     return text
 
 
+def set_name(image, name):
+    return cv2.putText(image, name, (43, 488), font, fontScale=1.2, color=(82, 69, 63), thickness=2,
+                       lineType=cv2.LINE_AA)
+
+
 def get_name(image):
     return subImage(image, 26, 439, 500, 56)
+
+
+def get_DOB(image):
+    return subImage(image, 350, 509, 250, 51)
+
+
+def set_DOB(image, dob):
+    return cv2.putText(image, dob, (358, 540), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
+                       lineType=cv2.LINE_AA)
+
+
+def set_sex(image, sex):
+    return cv2.putText(image, sex, (358, 580), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
+                       lineType=cv2.LINE_AA)
 
 
 def get_sex(image):
     return subImage(image, 350, 549, 100, 51)
 
 
+def set_issuer(image, iss):
+    return cv2.putText(image, iss, (358, 620), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
+                       lineType=cv2.LINE_AA)
+
+
 def get_issuer(image):
     return subImage(image, 350, 594, 120, 40)
 
 
-def get_expedition(image):
+def set_expiration(image, exp):
+    return cv2.putText(image, exp, (358, 660), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
+                       lineType=cv2.LINE_AA)
+
+
+def get_expiration(image):
     return subImage(image, 350, 630, 200, 50)
+
+
+def set_id(image, id):
+    return cv2.putText(image, id, (43, 800), font, fontScale=1.2, color=(82, 69, 63), thickness=2,
+                       lineType=cv2.LINE_AA)
 
 
 def get_id(image):

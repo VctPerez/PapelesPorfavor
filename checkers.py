@@ -11,26 +11,36 @@ import matplotlib.pyplot as plt
 
 def check_getters(image):
     name = f.get_name(image)
+    dob = f.get_DOB(image)
+    #f.show_image("DOB", dob)
     sex = f.get_sex(image)
     iss = f.get_issuer(image)
-    exp = f.get_expedition(image)
+    exp = f.get_expiration(image)
     id = f.get_id(image)
 
-    plt.subplot(221)
+    plt.subplot(321)
     plt.title("Name")
     plt.imshow(name)
 
-    plt.subplot(222)
+    plt.subplot(322)
     plt.title("Sex")
     plt.imshow(sex)
 
-    plt.subplot(223)
+    plt.subplot(323)
     plt.title("Iss")
     plt.imshow(iss)
 
-    plt.subplot(224)
+    plt.subplot(324)
     plt.title("Exp")
     plt.imshow(exp)
+
+    plt.subplot(325)
+    plt.title("ID")
+    plt.imshow(id)
+
+    # plt.imshow(326)
+    # plt.title("DOB")
+    # plt.imshow(dob)
 
     plt.show()
     text1 = f.extract_text_from_image(name)
@@ -75,26 +85,20 @@ def check_binarize():
 def write_image(image):
     font = cv2.FONT_HERSHEY_SIMPLEX
     ## ESCRIBIR NOMBRE
-    image = cv2.putText(image, "Victor Perez Armenta", (43, 488), font, fontScale=1.2, color=(82, 69, 63), thickness=2,
-                         lineType=cv2.LINE_AA)
+    image = f.set_name(image, " Victor Perez")
 
     ## ESCRIBIR NACIMIENTO
-    image= cv2.putText(image, "05/08/2003", (358, 540), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
-                       lineType=cv2.LINE_AA)
+    image= f.set_DOB(image, "05/08/2003")
     ## ESCRIBIR SEXO
-    image = cv2.putText(image, "Masc", (358, 580), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
-                       lineType=cv2.LINE_AA)
+    image=  f.set_sex(image, "Masc")
     ## ESCRIBIR ISSUER
-    image = cv2.putText(image, "Malaga", (358, 620), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
-                       lineType=cv2.LINE_AA)
+    image = f.set_issuer(image, "Malaga")
 
     ## ESCRIBIR CADUCIDAD
-    image = cv2.putText(image, "01/01/2027", (358, 660), font, fontScale=0.8, color=(82, 69, 63), thickness=2,
-                        lineType=cv2.LINE_AA)
+    image = f.set_expiration(image, "01/01/2027")
 
     ## ESCRIBIR ID
-    return cv2.putText(image, "AAAA-BBBB", (43, 800), font, fontScale=1.2, color=(82, 69, 63), thickness=2,
-                       lineType=cv2.LINE_AA)
+    return f.set_id(image, "AAAA-BBBB")
 
 
 if __name__ == '__main__':
@@ -103,18 +107,19 @@ if __name__ == '__main__':
     f.show_image("imagen", image)
     image = write_image(image)
     f.show_image("image", image)
-    check_getters(image)
     # check_face_recognition()
     ##########################################################################
-    # face = f.load_image("images/faceRecognition/victor1.jpg")
-    # image = f.insert_face_into_passport(image, face)
-    # f.show_image("pass", image)
+    face = f.load_image("images/faceRecognition/victor1.jpg")
+    image = f.insert_face_into_passport(image, face)
+    f.show_image("pass", image)
+    check_getters(image)
     ###########################################################################
-    # main()
+    # Uso de sleep para animaciones
     # for i in range(10):
     #     print(i)
     #     time.sleep(1)
     #######################################################################
+    # Funcion para cargar imagenes en una etiqueta
     # def load_image(self):
     #     self.filename = QtWidgets.QFileDialog.getOpenFileName(filter="Image (*.*)")[0]
     #     self.image = f.load_image(self.filename)

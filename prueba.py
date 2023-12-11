@@ -1,45 +1,62 @@
-from PyQt5.QtWidgets import (QWidget, QApplication, QPushButton,
-                             QLabel, QHBoxLayout, QSizePolicy, QFrame)
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import QPropertyAnimation, pyqtProperty, QRect
+from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
-class Example(QWidget):
 
-    def __init__(self):
-        super().__init__()
+class Ui_MainWindow(QtWidgets.QWidget):
+    def setupUi(self, MainWindow):
+        MainWindow.resize(422, 255)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
 
-        self.initUI()
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(160, 130, 93, 28))
 
-    def initUI(self):
+        # For displaying confirmation message along with user's info.
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(170, 40, 201, 111))
 
-        self.button = QPushButton("Start", self)
-        self.button.clicked.connect(self.doAnim)
-        self.button.move(30, 30)
+        # Keeping the text of label empty initially.
+        self.label.setText("")
 
-        self.frame = QFrame(self)
-        self.frame.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        self.frame.setGeometry(150, 30, 100, 100)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.setGeometry(300, 300, 380, 300)
-        self.setWindowTitle('Animation')
-        self.show()
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.pushButton.setText(_translate("MainWindow", "Proceed"))
+        self.pushButton.clicked.connect(self.takeinputs)
 
-    def doAnim(self):
+    def takeinputs(self):
+        name, done1 = QtWidgets.QInputDialog.getText(
+            self, 'Input Dialog', 'introduce nombre')
 
-        self.anim = QPropertyAnimation(self.frame, b"geometry")
-        self.anim.setDuration(1666)
-        self.anim.setStartValue(QRect(150, 30, 100, 100))
-        self.anim.setEndValue(QRect(150, 200, 100, 100))
-        self.anim.start()
+        roll, done2 = QtWidgets.QInputDialog.getInt(
+            self, 'Input Dialog', 'Enter your roll:')
 
+        cgpa, done3 = QtWidgets.QInputDialog.getDouble(
+            self, 'Input Dialog', 'Enter your CGPA:')
 
-def main():
+        langs = ['C', 'c++', 'Java', 'Python', 'Javascript']
+        lang, done4 = QtWidgets.QInputDialog.getItem(
+            self, 'Input Dialog', 'Language you know:', langs)
 
-    app = QApplication([])
-    ex = Example()
-    sys.exit(app.exec())
+        if done1 and done2 and done3 and done4:
+            # Showing confirmation message along
+            # with information provided by user.
+            self.label.setText('Information stored Successfully\nName: '
+                               + str(name) + '(' + str(roll) + ')' + '\n' + 'CGPA: '
+                               + str(cgpa) + '\nSelected Language: ' + str(lang))
+
+            # Hide the pushbutton after inputs provided by the use.
+            self.pushButton.hide()
 
 
 if __name__ == "__main__":
-    main()
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+
+    sys.exit(app.exec_())

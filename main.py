@@ -9,7 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QUrl
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
+
 import functions as f
+from playsound import playsound
 import cv2, camera, os
 
 
@@ -23,6 +27,7 @@ def load_image(label,image=None):
                          , QtGui.QImage.Format_RGB888)
     label.setPixmap(QtGui.QPixmap.fromImage(image))
 
+rutaPrincipal = os.getcwd()
 class Ui_MainWindow(QtWidgets.QWidget):
 
     def get_text_from_dialog(self, whatToInsert):
@@ -33,7 +38,9 @@ class Ui_MainWindow(QtWidgets.QWidget):
     def load_crearPas(self):
         self.stackedWidget.setCurrentIndex(3)
         self.crear_image = f.load_image("images/pasaporte_1.jpg")
-        load_image(self.pasaporteImagenLabel_2, self.crear_image)
+        self.nombrePasaporte = ""
+        self.facePicture = None
+        load_image(self.pasaporteImagenLabel_2, image=self.crear_image)
 
 
     def write_name(self):
@@ -79,6 +86,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         os.chdir(ruta)
         cv2.imwrite(f'{self.nombrePasaporte}_face.jpg', self.facePicture)
         cv2.imwrite(f'{self.nombrePasaporte}_passport.jpg', self.crear_image)
+        os.chdir(rutaPrincipal)
         self.stackedWidget.setCurrentIndex(0)
 
 
@@ -107,12 +115,19 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.insertarFotoButton.clicked.connect(self.take_picture)
         self.guardarButton.clicked.connect(self.save_passport)
 
-
+        #START MUSIC
+        QMediaPlaylist.addMedia(self.playlist, QMediaContent(QUrl.fromLocalFile("menu_theme.mp3")))
+        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+        # self.music_player.setMedia(QMediaContent(QUrl.fromLocalFile("menu_theme.mp3")))
+        self.music_player.setPlaylist(self.playlist)
+        self.music_player.play()
 
     def setupUi(self, MainWindow):
         self.crear_image = None # IMAGEN DEL PASAPORTE
         self.facePicture = None # FOTO DE LA PERSONA
         self.nombrePasaporte = None # NOMBRE DE LA PERSONA SIN ESPACIOS
+        self.music_player = QMediaPlayer()
+        self.playlist = QMediaPlaylist()
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 1080)
@@ -2004,4 +2019,5 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.showFullScreen()
+    #playsound("menu_theme.mp3")
     sys.exit(app.exec_())

@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import functions as f
-import cv2
+import cv2, camera
 
 
 def load_image(label,image=None):
@@ -67,7 +67,11 @@ class Ui_MainWindow(QtWidgets.QWidget):
         load_image(self.pasaporteImagenLabel_2, self.crear_image)
 
     def take_picture(self):
-        face = None
+        face = camera.takePicture()
+        print("hola")
+        self.crear_image = f.insert_face_into_passport(self.crear_image, face)
+        print("hola2")
+        load_image(self.pasaporteImagenLabel_2, self.crear_image)
 
     def insertEvents(self):
         #PATANALLA MENU

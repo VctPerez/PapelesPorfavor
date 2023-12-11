@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import functions as f
-import cv2, camera
+import cv2, camera, os
 
 
 def load_image(label,image=None):
@@ -38,6 +38,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
 
     def write_name(self):
         name = self.get_text_from_dialog("name")
+        self.nombrePasaporte = name.replace(" ","")
         self.crear_image = f.set_name(self.crear_image, name)
         load_image(self.pasaporteImagenLabel_2, self.crear_image)
     def write_DOB(self):
@@ -67,11 +68,19 @@ class Ui_MainWindow(QtWidgets.QWidget):
         load_image(self.pasaporteImagenLabel_2, self.crear_image)
 
     def take_picture(self):
-        face = camera.takePicture()
-        print("hola")
-        self.crear_image = f.insert_face_into_passport(self.crear_image, face)
-        print("hola2")
+        self.facePicture = camera.takePicture()
+        f.show_image("pic", self.facePicture)
+        self.crear_image = f.insert_face_into_passport(self.crear_image, self.facePicture)
         load_image(self.pasaporteImagenLabel_2, self.crear_image)
+
+    def save_passport(self):
+        ruta = f'images/passports/{self.nombrePasaporte}'
+        os.makedirs(ruta)
+        os.chdir(ruta)
+        cv2.imwrite(f'{self.nombrePasaporte}_face.jpg', self.facePicture)
+        cv2.imwrite(f'{self.nombrePasaporte}_passport.jpg', self.crear_image)
+        self.stackedWidget.setCurrentIndex(0)
+
 
     def insertEvents(self):
         #PATANALLA MENU
@@ -96,11 +105,14 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.insertarCadButton.clicked.connect(self.write_exp)
         self.insertarIdButton.clicked.connect(self.write_id)
         self.insertarFotoButton.clicked.connect(self.take_picture)
+        self.guardarButton.clicked.connect(self.save_passport)
 
 
 
     def setupUi(self, MainWindow):
-        self.crear_image = None
+        self.crear_image = None # IMAGEN DEL PASAPORTE
+        self.facePicture = None # FOTO DE LA PERSONA
+        self.nombrePasaporte = None # NOMBRE DE LA PERSONA SIN ESPACIOS
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 1080)

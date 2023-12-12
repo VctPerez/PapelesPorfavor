@@ -1,7 +1,9 @@
 import time
+from datetime import datetime
 
 import cv2
 
+import camera
 import functions as f
 import matplotlib
 
@@ -56,8 +58,8 @@ def check_getters(image):
 
 
 def check_face_recognition():
-    victor1 = f.load_face_image("images/faceRecognition/victor1.jpg")
-    obama = f.load_face_image("images/faceRecognition/obama.png")
+    victor1 = f.load_face_image("images/passports/Victor/Victor_face.jpg")
+    obama = camera.takePicture()
     # locations_victor1 = f.get_face_locations("images/faceRecognition/victor1.jpg")
     # print(f'Faces: {len(locations_victor1)}\n\t Content: {locations_victor1}')
     # f.show_image("victor", victor1)
@@ -68,9 +70,10 @@ def check_face_recognition():
     # face_1 = f.passport_image(face_1, 120)
 
     # f.show_image("face", face_1)
-    descriptor1 = f.get_face_descriptor(victor1)[0]
-    descriptor2 = f.get_face_descriptor(obama)[0]
-    print(f.compare_faces([descriptor1], descriptor2))
+    # descriptor1 = f.get_face_descriptor(victor1)[0]
+    descriptor2 = f.get_face_descriptor(victor1)
+    print("Descriptor 2 value: ", descriptor2)
+    # print("Son iguales ? ->",f.compare_faces([descriptor1], descriptor2))
 
     # print(f'Difference: {f.get_face_difference(descriptor, f)}')
 
@@ -102,17 +105,20 @@ def write_image(image):
 
 
 if __name__ == '__main__':
-    path = "images/pasaporte_1.jpg"
-    image = f.load_image(path)
-    f.show_image("imagen", image)
-    image = write_image(image)
-    f.show_image("image", image)
-    # check_face_recognition()
+    # path = "images/passports/Victor/Victor_passport.jpg"
+    # image = f.load_image(path)
+    # fecha_image = f.get_DOB(image)
+    # fecha_str = f.extract_text_from_image(fecha_image)
+    # print(fecha_str)
+    # fecha_datetime = datetime.strptime(fecha_str, "%d/%m/%Y")
+    # print(fecha_datetime)
+
+    check_face_recognition()
     ##########################################################################
-    face = f.load_image("images/faceRecognition/victor1.jpg")
-    image = f.insert_face_into_passport(image, face)
-    f.show_image("pass", image)
-    check_getters(image)
+    # face = f.load_image("images/faceRecognition/victor1.jpg")
+    # image = f.insert_face_into_passport(image, face)
+    # f.show_image("pass", image)
+    # check_getters(image)
     ###########################################################################
     # Uso de sleep para animaciones
     # for i in range(10):

@@ -13,11 +13,13 @@ from PyQt5.QtCore import QUrl
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 
 import functions as f
-from playsound import playsound
-import cv2, camera, os
+import cv2, camera, os, datetime
 
+ciudades = ["Malaga", "Madrid", "Barcelona", "Paris", "Londres", "Roma", "Berlin", "Nueva York", "Washington"]
+criminales = ["Adrian Torremocha Doblas"]
 
 def load_image(label,image=None):
+    filename = ""
     if image is None:
         filename = QtWidgets.QFileDialog.getOpenFileName(filter="Image (*.*)")[0]
         image = f.load_image(filename)
@@ -26,6 +28,28 @@ def load_image(label,image=None):
     image = QtGui.QImage(image, image.shape[1], image.shape[0], image.strides[0]
                          , QtGui.QImage.Format_RGB888)
     label.setPixmap(QtGui.QPixmap.fromImage(image))
+    return filename
+
+def calculate_age(birthDate):
+    today = datetime.datetime.today()
+    age = today.year - birthDate.year - ((today.month, today.day) < (birthDate.month, birthDate.day))
+
+    return age
+
+
+def check_picture(passport_picture):
+    picture = camera.takePicture()
+    # f.show_image("foto", picture)
+    # f.show_image("foto pasaporte", passport_picture)
+    # print("foto tomada")
+    passport_desc = f.get_face_descriptor(passport_picture)[0]
+    print("descriptor 1 hecho")
+    pic_desc = f.get_face_descriptor(picture)[0]
+    print("Descriptores creados")
+    res = f.compare_faces([passport_desc], pic_desc)
+    print("Comparacion hecha")
+    return res
+
 
 rutaPrincipal = os.getcwd()
 class Ui_MainWindow(QtWidgets.QWidget):
@@ -89,6 +113,106 @@ class Ui_MainWindow(QtWidgets.QWidget):
         os.chdir(rutaPrincipal)
         self.stackedWidget.setCurrentIndex(0)
 
+    def choose_passport(self):
+        path = load_image(self.pasaporteImagenLabel)
+        # self.facePicture = f.load_image("images/passports/Victor/Victor_face.jpg")
+        self.pasaporte_elegido = f.load_image(path)
+        face_path = path.replace("_passport", "_face")
+        self.facePicture = f.load_image(face_path)
+        # f.show_image("foto", self.facePicture)
+
+    def load_passport_checking(self):
+        self.stackedWidget.setCurrentIndex(2)
+        self.pasaporteImagen_check.setPixmap(self.pasaporteImagenLabel.pixmap())
+        self.checkers()
+
+
+
+    def checkers(self):
+        print("Entra")
+        entrar = True
+
+        #print(f.extract_text_from_image(f.get_issuer(self.pasaporte_elegido)))
+        if entrar:
+            if criminales.__contains__(f.extract_text_from_image(f.get_name(self.pasaporte_elegido))):
+                self.checkNombreLabel.setText(f'{self.checkNombreLabel.text()} MAL')
+                entrar = False
+
+            else:
+                self.checkNombreLabel.setText(f'{self.checkNombreLabel.text()} BIEN')
+        print("Check1")
+        if entrar:
+            birthDate = datetime.datetime.strptime(f.extract_text_from_image(f.get_DOB(self.pasaporte_elegido)), "%d/%m/%Y")
+            if calculate_age(birthDate) >= 18:
+                self.checkFechaLabel.setText(f'{self.checkFechaLabel.text()} BIEN')
+
+            else:
+                self.checkFechaLabel.setText(f'{self.checkFechaLabel.text()} MAL')
+                entrar = False
+
+        print("Check2")
+        if entrar:
+            if not ciudades.__contains__(f.extract_text_from_image(f.get_issuer(self.pasaporte_elegido))):
+                self.checkCiudadLabel.setText(f"{self.checkCiudadLabel.text()} MAL")
+                entrar = False
+            else:
+                self.checkCiudadLabel.setText(f"{self.checkCiudadLabel.text()} BIEN")
+
+        print("Check2")
+        if entrar:
+            if (datetime.datetime.strptime(f.extract_text_from_image(f.get_expiration(self.pasaporte_elegido)), "%d/%m/%Y") < datetime.datetime.today()) and entrar :
+                self.checkCaducidadLabel.setText(f"{self.checkCaducidadLabel.text()} MAL")
+                entrar = False
+
+            else:
+                self.checkCaducidadLabel.setText(f"{self.checkCaducidadLabel.text()} BIEN")
+
+        print("Check4")
+        if entrar:
+            if len(f.extract_text_from_image(f.get_id(self.pasaporte_elegido)).split('—')) != 2 :
+                self.checkIdLabel.setText(f"{self.checkIdLabel.text()} MAL")
+                entrar = False
+            else:
+                self.checkIdLabel.setText(f"{self.checkIdLabel.text()} BIEN")
+
+        print("Check5")
+        if entrar:
+            if check_picture(self.facePicture):
+                self.checkFotoLabel.setText(f'{self.checkFotoLabel.text()} BIEN')
+
+            else:
+                self.checkFotoLabel.setText(f'{self.checkFotoLabel.text()} BIEN')
+                entrar = False
+
+        print("Check6")
+        if entrar:
+            palette = QtGui.QPalette()
+            brush = QtGui.QBrush(QtGui.QColor(0, 255, 0))
+            brush.setStyle(QtCore.Qt.SolidPattern)
+            palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
+            self.permisoLabel.setPalette(palette)
+            self.permisoLabel.setText("PUEDE ENTRAR")
+
+        else:
+            palette = QtGui.QPalette()
+            brush = QtGui.QBrush(QtGui.QColor(255, 0, 0))
+            brush.setStyle(QtCore.Qt.SolidPattern)
+            palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
+            self.permisoLabel.setPalette(palette)
+            self.permisoLabel.setText("NO PUEDE ENTRAR")
+
+
+    def volver_check(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.pasaporteImagenLabel.clear()
+        self.pasaporteImagen_check.clear()
+        self.pasaporte_elegido = None
+        self.facePicture = None
+        self.checkNombreLabel.setText("NOMBRE:")
+        self.checkFechaLabel.setText("FECHA DE NACIMIENTO:")
+        self.checkCiudadLabel.setText("CIUDAD:")
+        self.checkCaducidadLabel.setText("CADUCIDAD:")
+        self.checkFotoLabel.setText("FOTO:")
 
     def insertEvents(self):
         #PATANALLA MENU
@@ -97,10 +221,10 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.presentarPasaporteButton.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
 
         #PANTALLA SELECCION
-        self.darPasaporteButton.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
-        self.seleccionarPasaporteButton.clicked.connect(lambda: load_image(self.pasaporteImagenLabel))
+        self.darPasaporteButton.clicked.connect(self.load_passport_checking)
+        self.seleccionarPasaporteButton.clicked.connect(self.choose_passport)
         #PANTALLA CHECK
-        self.volverButton.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
+        self.volverButton.clicked.connect(self.volver_check)
 
         #PANTALLA CREACION
         self.volverButton_crear.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
@@ -123,9 +247,10 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.music_player.play()
 
     def setupUi(self, MainWindow):
-        self.crear_image = None # IMAGEN DEL PASAPORTE
+        self.crear_image = None # IMAGEN DEL PASAPORTE CREADO
         self.facePicture = None # FOTO DE LA PERSONA
         self.nombrePasaporte = None # NOMBRE DE LA PERSONA SIN ESPACIOS
+        self.pasaporte_elegido = None # PASAPORTE ELEGIDO PARA PRESENTAR
         self.music_player = QMediaPlayer()
         self.playlist = QMediaPlaylist()
 
@@ -645,7 +770,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.pasaporteImagen_check.setText("")
         self.pasaporteImagen_check.setObjectName("pasaporteImagen_check")
         self.checkNombreLabel = QtWidgets.QLabel(self.check)
-        self.checkNombreLabel.setGeometry(QtCore.QRect(1030, 350, 121, 41))
+        self.checkNombreLabel.setGeometry(QtCore.QRect(1030, 350, 400, 41))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -799,7 +924,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
 "lor: rgb(0,0,0)")
         self.checkNombreLabel.setObjectName("checkNombreLabel")
         self.checkFechaLabel = QtWidgets.QLabel(self.check)
-        self.checkFechaLabel.setGeometry(QtCore.QRect(1030, 440, 311, 41))
+        self.checkFechaLabel.setGeometry(QtCore.QRect(1030, 440, 500, 41))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -1991,7 +2116,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.checkNombreLabel.setText(_translate("MainWindow", "NOMBRE:"))
         self.checkFechaLabel.setText(_translate("MainWindow", "FECHA DE NACIMIENTO:"))
         self.checkCiudadLabel.setText(_translate("MainWindow", "CIUDAD:"))
-        self.checkCaducidadLabel.setText(_translate("MainWindow", "CADUCIDAD"))
+        self.checkCaducidadLabel.setText(_translate("MainWindow", "CADUCIDAD:"))
         self.volverButton.setText(_translate("MainWindow", "VOLVER"))
         self.checkIdLabel.setText(_translate("MainWindow", "IDENTIFICADOR:"))
         self.checkFotoLabel.setText(_translate("MainWindow", "FOTO:"))

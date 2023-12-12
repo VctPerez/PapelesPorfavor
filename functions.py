@@ -115,7 +115,8 @@ def extract_text_from_image(image):
     threshold_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
     text = pts.image_to_string(threshold_image)
-    return text
+
+    return text[0:len(text)-1]
 
 
 def set_name(image, name):

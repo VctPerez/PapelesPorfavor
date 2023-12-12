@@ -13,12 +13,21 @@ Firstly, its main purpose is going to be to recognise failures in passports, lik
 I would like to implement something about facial recognition too, but I will go for it just if I get the time (I could).
 
 ## Language 
-Python will be the main programming language in this project.
+Python will be the main programming language in this project, in order to get experience coding with it.
 
 ## How it works?
 The app gives you two options: create a passport or submit it.
 * Create a Passport: You have to introduce all the data the app asks you to. Then, you can save the passport, 
-or reset it 
+or reset it.
+  * Name: Doesn't need to be on a specified way.
+  * Birthdate: You must be 18 years old
+  * Gender: It isn't checked
+  * Issuer: It has to be on the issuer's list.
+  * Expiration date: It can't be any day before today.
+  * Identifier: It must have an "-" splitting it in two words.
+  * Picture: Obviously, it must be yours.
+  
+
 * Submit a Passport: You will have to choose the passport you want to use, and answer the questions proposed. When 
 you have answered the questions and chose the passport, the app will check if it's okay (it will check your photo, 
 your name, etc...)

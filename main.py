@@ -181,7 +181,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
                 self.checkFotoLabel.setText(f'{self.checkFotoLabel.text()} BIEN')
 
             else:
-                self.checkFotoLabel.setText(f'{self.checkFotoLabel.text()} BIEN')
+                self.checkFotoLabel.setText(f'{self.checkFotoLabel.text()} MAL')
                 entrar = False
 
         print("Check6")
@@ -212,6 +212,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.checkFechaLabel.setText("FECHA DE NACIMIENTO:")
         self.checkCiudadLabel.setText("CIUDAD:")
         self.checkCaducidadLabel.setText("CADUCIDAD:")
+        self.checkIdLabel.setText("IDENTIFICADOR: ")
         self.checkFotoLabel.setText("FOTO:")
 
     def insertEvents(self):

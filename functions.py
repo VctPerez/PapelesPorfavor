@@ -204,12 +204,15 @@ def compare_faces(descriptor_list, descriptor2):
 def change_face_histogram(face):
     face_coords = get_face_locations(face)
     face_binarized = binarize_image(face, 100)
+    # show_image("binarized", face_binarized)
     face_matched = matcher_histograms(cv2.cvtColor(face_binarized, cv2.COLOR_GRAY2BGR))
+    # show_image("matched", face_matched)
     return get_face_from_image(face_matched, face_coords)
 
 
 def insert_face_into_passport(passport, picture):
     face = change_face_histogram(picture)
     face = resize(face, 209, 247)
+    # show_image("resized", face)
     passport[513:760, 43:252] = face
     return passport

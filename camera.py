@@ -11,7 +11,7 @@ def takePicture():
     while not done:
         ret, frame = frames.read()
         frame = cv2.flip(frame, 1)
-        #frame = f.lut_chart(frame, 1.3)
+        frame = f.lut_chart(frame, 1.3)
         frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         faces = len(f.get_face_locations(frame))

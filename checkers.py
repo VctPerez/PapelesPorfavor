@@ -113,7 +113,7 @@ if __name__ == '__main__':
     # fecha_datetime = datetime.strptime(fecha_str, "%d/%m/%Y")
     # print(fecha_datetime)
 
-    check_face_recognition()
+    #check_face_recognition()
     ##########################################################################
     # face = f.load_image("images/faceRecognition/victor1.jpg")
     # image = f.insert_face_into_passport(image, face)
@@ -133,3 +133,5 @@ if __name__ == '__main__':
     #     self.image = QtGui.QImage(self.image, self.image.shape[1], self.image.shape[0], self.image.strides[0]
     #                               , QtGui.QImage.Format_RGB888)
     #     self.label.setPixmap(QtGui.QPixmap.fromImage(self.image))
+    ##########################################################################
+    camera.cabine_camera()

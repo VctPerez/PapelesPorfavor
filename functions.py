@@ -125,7 +125,7 @@ def set_name(image, name):
 
 
 def get_name(image):
-    return subImage(image, 26, 439, 500, 56)
+    return subImage(image, 26, 439, 550, 56)
 
 
 def get_DOB(image):
